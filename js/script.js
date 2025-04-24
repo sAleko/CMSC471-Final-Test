@@ -4,6 +4,11 @@ console.log('D3 Version:', d3.version);
 
 // Set up SVG dimensions
 const width = 700, height = 300;
+const xMax = 100, curveMargin = 80
+const randRange = xMax/3 ;
+const circleRadius = 5, numCircles = 500;
+const startLowPerc = 0.2, endLowPerc = 0.3
+const animationDuration = 5, randDelayDuration = 20;
 
 // Append an SVG element to the body
 const svg = d3.select("#vis")
@@ -11,55 +16,75 @@ const svg = d3.select("#vis")
     .attr("width", width)
     .attr("height", height);
 
-// Define a path (a simple sine wave curve)
+let colorScale = d3.scaleSequential(d3.interpolateTurbo)
+    .domain([0, xMax]);
+
+    // Define a path (a simple sine wave curve)
+
+function generateBezierPath(p1, p2) {
+    // Control points: horizontally in the middle, vertically offset for curve
+    const cp1 = { x: p1.x + (p2.x - p1.x) / 3, y: p1.y };
+    const cp2 = { x: p2.x - (p2.x - p1.x) / 3, y: p2.y };
+  
+    // Construct the path string
+    return `M${p1.x},${p1.y} C${cp1.x},${cp1.y} ${cp2.x},${cp2.y} ${p2.x},${p2.y}`;
+  }
 
 
-// const pathData = "M 50 200 Q 300 50 550 200 T 1050 200";
+    var x = d3.scaleLinear().domain([0, xMax]).range([curveMargin, width-curveMargin]);
+    var y = d3.scaleLinear().domain([0, xMax]).range([curveMargin, height-curveMargin]);
 
+for (let i = 0; i < numCircles; i++) {
+    
+    const startAffected = Math.random() > startLowPerc
 
+    const start = {x: x(0), 
+                   y: startAffected  ? 
+                    y(xMax + (Math.random() * randRange) - (randRange / 2)) : 
+                    y((Math.random() * randRange) - (randRange / 2))}
 
-    var data = d3.range(0, 10).map(function(k) {
-      var value = Math.cos((1/11) * k * Math.PI)*5+5;
-      return value;
-    });
+    const end =   {x: x(xMax), 
+                   y: (!startAffected ? 
+                        Math.random() < endLowPerc : 
+                        Math.random() > endLowPerc)  ? 
+                    y(xMax + (Math.random() * randRange) - (randRange / 2)) : 
+                    y((Math.random() * randRange) - (randRange / 2))}
 
-    var x = d3.scaleLinear().domain([0, 10]).range([0, 700]);
-    var y = d3.scaleLinear().domain([0, 10]).range([10, 290]);
-    var line = d3.line()
-    .curve(d3.curveCardinal)
-    .x((d, i) => x(i))
-    .y(d => y(d));
+    // Append the path to the SVG (for visualization)
+    const path = svg.append("path")
+        .attr("d", generateBezierPath(start, end))
+        .attr("fill", "none")
+        .attr("stroke", "none")
+        .attr("stroke-width", 1);
 
+    // Get the total length of the path
+    const pathLength = path.node().getTotalLength();
 
+    const initPoint = path.node().getPointAtLength(0);
+    // Create the moving circle
+    const circle = svg.append("circle")
+        .attr("r", circleRadius)
+        .attr("fill", colorScale(Math.random() * xMax))
+        .attr("cx", initPoint.x)
+        .attr("cy", initPoint.y)
+    
+        
+    // Function to animate the circle along the path
+    function animate() {
+        circle.transition()
+            .delay(Math.random() * randDelayDuration * 1000)
+            .duration(animationDuration * 1000)  // Animation duration
+            .ease(d3.easeLinear)  // Linear movement
+            .attrTween("transform", function() {
+                return function(t) {
+                    const point = path.node().getPointAtLength(t * pathLength);
+                    return `translate(${point.x-initPoint.x},${point.y-initPoint.y})`;
+                };
+            })
+            // .on("end", animate);  // Loop animation
+    }
 
-// Append the path to the SVG (for visualization)
-const path = svg.append("path")
-    .attr("d", line(data))
-    .attr("fill", "none")
-    .attr("stroke", "none")
-    .attr("stroke-width", 2);
-
-// Get the total length of the path
-const pathLength = path.node().getTotalLength();
-
-// Create the moving circle
-const circle = svg.append("circle")
-    .attr("r", 7)
-    .attr("fill", "red");
-
-// Function to animate the circle along the path
-function animate() {
-    circle.transition()
-        .duration(4000)  // Animation duration (4s)
-        .ease(d3.easeLinear)  // Linear movement
-        .attrTween("transform", function() {
-            return function(t) {
-                const point = path.node().getPointAtLength(t * pathLength);
-                return `translate(${point.x},${point.y})`;
-            };
-        })
-        .on("end", animate);  // Loop animation
+    // Start the animation
+    animate();
 }
 
-// Start the animation
-animate();
