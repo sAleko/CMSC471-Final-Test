@@ -12,13 +12,39 @@
 
     <div class="container"> <!-- Centers content and sets max width -->
         <h1>Final Project Testing</h1>
+               
+        <div id="controls">
+            <h4>Years:</h4>
+                Start Year:         <select id="startYearVar" class="variable"></select><br>
+                End Year:           <select id="endYearVar" class="variable"></select>
+            <br>
+            <div class="selectionGroups" style="float: left;">
+                <h4>Group 1:</h4>
+                Age Range:          <select id="g1AgeVar" class="variable"></select><br>
+                Sex:                <select id="g1SexVar" class="variable"></select><br>
+                Ethnicity:          <select id="g1EthnicityVar" class="variable"></select><br>
+                Bodily Health:      <select id="g1HealthVar" class="variable"></select><br>
+                Income Range:       <select id="g1IncomeVar" class="variable"></select><br>
+                Health Insurance:   <select id="g1InsuredVar" class="variable"></select><br>
+                Military Service:   <select id="g1ServedVar" class="variable"></select><br>
+            </div>
+            <div class="selectionGroups" style="float: right;">
+                <h4>Group 2:</h4>
+                Age Range:          <select id="g2AgeVar" class="variable"></select><br>
+                Sex:                <select id="g2SexVar" class="variable"></select><br>
+                Ethnicity:          <select id="g2EthnicityVar" class="variable"></select><br>
+                Bodily Health:      <select id="g2HealthVar" class="variable"></select><br>
+                Income Range:       <select id="g2IncomeVar" class="variable"></select><br>
+                Health Insurance:   <select id="g2InsuredVar" class="variable"></select><br>
+                Military Service:   <select id="g2ServedVar" class="variable"></select><br>
+            </div>
+        </div>
         
         <div id="loadingGif">
             <img src="https://media.tenor.com/WX_LDjYUrMsAAAAi/loading.gif" alt="Loading" style="width:48px;height:48px;">
             Loading data...
         </div>
-        
-        
+
         <div id="vis"></div> <!--  Will hold our visualization (SVG) -->
     </div>
     

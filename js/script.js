@@ -1,43 +1,115 @@
 console.log('D3 Version:', d3.version);
 
 // Ensure D3.js is included in your HTML file before running this script
-
 // Set up SVG dimensions
-const width = 700, height = 300;
+const width = 800;
+const height = 400;
 const xMax = 100, curveMargin = 80
 const randRange = xMax/3 ;
 const circleRadius = 5, numCircles = 500;
 const startLowPerc = 0.2, endLowPerc = 0.3
 const animationDuration = 5, randDelayDuration = 20;
-
-// Load Data
-function init() {
-    d3.tsv("data/NSDUH_2023_Tab.txt", d => ({
-        // JavaScript's Date object stores time in UTC internally.
-        // We add a time zone offset to avoid potential issues.
-        date: d.FILEDATE,  
-        // Convert confirmed cases to numbers; assume 0 if missing (NA)
-        isDepressed: d.ADDPREV
-    })).then(data => {
-        console.log(data); // Check if data loads correctly
-        loadCircles();
-        document.getElementById("loadingGif").style.visibility = "hidden";
-    });
-}
-
-
-window.addEventListener('load', init);
-
-// Append an SVG element to the body
-const svg = d3.select("#vis")
-    .append("svg")
-    .attr("width", width)
-    .attr("height", height);
+const optionToField = {
+    startYear: 'year',
+    endYear: 'year',
+    g1Age: 'ageRange',
+    g1Sex: 'sex',
+    g1Ethnicity: 'ethnicity',
+    g1Health: 'health',
+    g1Income: 'income',
+    g1Insured: 'insured',
+    g1Served: 'served',
+    g2Age: 'ageRange',
+    g2Sex: 'sex',
+    g2Ethnicity: 'ethnicity',
+    g2Health: 'health',
+    g2Income: 'income',
+    g2Insured: 'insured',
+    g2Served: 'served'
+};
 
 let colorScale = d3.scaleSequential(d3.interpolateTurbo)
     .domain([0, xMax]);
+let allData = []
 
-    // Define a path (a simple sine wave curve)
+
+
+// Append an SVG element to the body
+const svg = d3.select("#vis")
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+
+
+// Load Data
+function init() {
+    d3.csv("data/data.csv", d => ({
+        year: (new Date(d.Date)).getFullYear(),             //Only need year
+        isDepressed: d.Depression == "Yes" ? 1 : 0,         //Can average easier 
+        ageRange: d.Age,                                    //Can deal with string stuff later
+        ethnicity: d.Race,                              
+        health: d.Health,                               
+        income: d.Income,                               
+        sex: d.Sex,                                     
+        insured:                                            //Made it look cleaner for pickers
+            d.HealthInsurance == "Yes" ? "Insured" :        
+            d.HealthInsurance == "No" ? "Uninsured" : 
+            "Other/Dk/Refused",                     
+        served:                                             //Made it look cleaner for pickers
+            d.HealthInsurance == "Yes" ? "Served" :        
+            d.HealthInsurance == "No" ? "Not Served" : 
+            "Other/Dk/Refused",                      
+    })).then(data => {
+        document.getElementById("loadingGif").style.visibility = "hidden";
+        console.log(data); // Check if data loads correctly
+        allData = data;
+
+          // Find Unique Selections:
+        //   function onlyUnique(value, index, array) {return array.indexOf(value) === index; }          
+        //   var a = data.map(d => d.served);
+        //   var unique = a.filter(onlyUnique);
+        //   console.log(unique);
+        
+        setupSelectors();
+        loadCircles();
+    })
+    .catch(error => console.error('Error loading data:', error));;
+}
+
+window.addEventListener('load', init);
+
+function setupSelectors() {
+    // Function to get unique values from a field in allData
+    function getUniqueValues(field) {
+        const uniqueValues = [...new Set(allData.map(d => d[field]))]
+            .filter(d => d !== undefined && d !== null && d !== '')
+            .sort();
+        return ['Any', ...uniqueValues]; // Add "Any" as the first option
+    }
+
+    // Update each dropdown
+    d3.selectAll('.variable')
+        .each(function() {
+            const select = d3.select(this);
+            const optionKey = select.attr('id').replace('Var', ''); // Remove 'Var' suffix
+            const field = optionToField[optionKey] || 'year'; // Default to 'year'
+
+            // Get unique values for the field
+            const uniqueValues = getUniqueValues(field);
+
+            // Populate dropdown with unique values
+            select.selectAll('option')
+                .data(uniqueValues)
+                .enter()
+                .append('option')
+                .text(d => d)
+                .attr('value', d => d);
+
+            // Set initial value to the first unique value (or empty if none)
+            select.property('value', uniqueValues[0] || '');
+        })
+}
+
 
 
 function generateBezierPath(p1, p2) {
@@ -48,8 +120,6 @@ function generateBezierPath(p1, p2) {
     // Construct the path string
     return `M${p1.x},${p1.y} C${cp1.x},${cp1.y} ${cp2.x},${cp2.y} ${p2.x},${p2.y}`;
   }
-
-
   
 function loadCircles() {
     var x = d3.scaleLinear().domain([0, xMax]).range([curveMargin, width-curveMargin]);

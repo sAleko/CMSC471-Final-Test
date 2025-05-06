@@ -26,6 +26,9 @@
     border: 1px solid #ccc; /*otherwise you can't see this part*/
 }
 
+#controls {
+    width: "100%";
+}
 
 .x-axis path,
 .y-axis path,
@@ -60,4 +63,24 @@ button {
     border-radius: 4px;
     pointer-events: none; /* Prevent tooltip from interfering with mouse events */
     font-size: 12px;
+}
+
+.selectionGroups {
+    display: inline-block;
+    margin-top: 1em;
+}
+
+select {
+    text-align: right;
+    float: right;
+}
+
+#startYearVar {
+    text-align: right;
+    float: none;
+}
+
+#endYearVar {
+    text-align: right;
+    float: none;
 }
