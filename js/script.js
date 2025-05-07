@@ -31,9 +31,12 @@ const optionToField = {
 let colorScale = d3.scaleSequential(d3.interpolateTurbo)
     .domain([0, xMax]);
 let allData = []
-let group1 = []
-let group2 = []
 
+let group1before = []
+let group2before = []
+
+let group1after = []
+let group2after = []
 
 
 // Append an SVG element to the body
@@ -134,10 +137,10 @@ function updateVis() {
 function filter() {
     const dropdownValue = ((x) => d3.select(`#${x}Var`).node().value)
 
-    g1vars = ['startYear', 'g1Age', 'g1Sex', 'g1Ethnicity', 'g1Health', 'g1Income', 'g1Insured', 'g1Served']
-    g2vars = ['endYear', 'g2Age', 'g2Sex', 'g2Ethnicity', 'g2Health', 'g2Income', 'g2Insured', 'g2Served']    
+    g1vars = ['g1Age', 'g1Sex', 'g1Ethnicity', 'g1Health', 'g1Income', 'g1Insured', 'g1Served']
+    g2vars = ['g2Age', 'g2Sex', 'g2Ethnicity', 'g2Health', 'g2Income', 'g2Insured', 'g2Served']    
 
-    group1 = allData.filter(
+    let group1 = allData.filter(
         function (d) {
             for (const dropdownKey of g1vars) {
                 let value = dropdownValue(dropdownKey)
@@ -156,7 +159,7 @@ function filter() {
         }
     )
 
-    group2 = allData.filter(
+    let group2 = allData.filter(
         function (d) {
             for (const dropdownKey of g2vars) {
                 let value = dropdownValue(dropdownKey)
@@ -175,8 +178,16 @@ function filter() {
         }
     )
 
-    console.log('Group 1: ', group1)
-    console.log('Group 2: ', group2)
+    group1before = group1.filter(d => d.year == dropdownValue('startYear'))
+    group2before = group2.filter(d => d.year == dropdownValue('startYear'))
+
+    group1after = group1.filter(d => d.year == dropdownValue('endYear'))
+    group2after = group2.filter(d => d.year == dropdownValue('endYear'))
+    
+    console.log('Group 1 Before: ', group1before)
+    console.log('Group 1 After: ', group1after)
+    console.log('Group 2 Before: ', group2before)
+    console.log('Group 2 After: ', group2after)
 }
 
 
