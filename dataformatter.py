@@ -9,7 +9,8 @@ COL_MAP = {
     'IRSEX': 'Sex',
     'ANYHLTI2': 'Health Insurance',
     'SERVICE': 'Military Service',
-    'FILEDATE': 'Date'
+    'FILEDATE': 'Date',
+    'ANALWT_C': 'Weight',
 }
 
 LABEL_MAP = {
@@ -93,16 +94,28 @@ def tab_weighted_percent(df: pd.DataFrame, var: str, weight: str) -> float:
     return weighted_count / weighted_count.sum() * 100
 
 
-def format(year: str = YEAR):
-    df = pd.read_csv(f'data/datasets/NSDUH_{year}_Tab.txt', sep='\t', header=0, usecols=COL_MAP.keys())
+def format(year: int = YEAR, col_mapper: dict = COL_MAP):
+    
+    if year == 2020:
+        col_mapper = col_mapper.copy()
+        col_mapper.pop('ANALWT_C')
+        col_mapper['ANALWTQ1Q4_C'] = 'Weight'
+    
+    if year >= 2021:
+        col_mapper = col_mapper.copy()
+        col_mapper.pop('ANALWT_C')
+        col_mapper['ANALWT2_C'] = 'Weight'
+    
+    df = pd.read_csv(f'data/NSDUH_{year}_Tab.txt', sep='\t', header=0, usecols=col_mapper.keys())
+    
     df.replace(LABEL_MAP, inplace=True)
-    df.rename(columns=COL_MAP, inplace=True)
+    df.rename(columns=col_mapper, inplace=True)
 
     df = df[(df['Depression'] != 'Skip/Other')]
 
     print(df)
 
-    df.to_csv(f'{year}.csv', index=False, columns=COL_MAP.values())
+    df.to_csv(f'{year}.csv', index=False, columns=col_mapper.values())
 
 
 

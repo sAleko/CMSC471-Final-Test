@@ -31,6 +31,8 @@ const optionToField = {
 let colorScale = d3.scaleSequential(d3.interpolateTurbo)
     .domain([0, xMax]);
 let allData = []
+let group1 = []
+let group2 = []
 
 
 
@@ -71,6 +73,7 @@ function init() {
         //   console.log(unique);
         
         setupSelectors();
+        filter()
         loadCircles();
     })
     .catch(error => console.error('Error loading data:', error));;
@@ -87,6 +90,8 @@ function setupSelectors() {
         return ['Any', ...uniqueValues]; // Add "Any" as the first option
     }
 
+    let firstYear = true
+
     // Update each dropdown
     d3.selectAll('.variable')
         .each(function() {
@@ -95,7 +100,11 @@ function setupSelectors() {
             const field = optionToField[optionKey] || 'year'; // Default to 'year'
 
             // Get unique values for the field
-            const uniqueValues = getUniqueValues(field);
+            let uniqueValues = getUniqueValues(field);
+
+            if (field == 'year') {
+                uniqueValues = uniqueValues.slice(1)
+            }
 
             // Populate dropdown with unique values
             select.selectAll('option')
@@ -107,9 +116,68 @@ function setupSelectors() {
 
             // Set initial value to the first unique value (or empty if none)
             select.property('value', uniqueValues[0] || '');
+
+            if (!firstYear && field == 'year') {
+                select.property('value', uniqueValues[uniqueValues.length - 1] || '');
+            } else {
+                firstYear = false
+            }
+
         })
 }
 
+
+function updateVis() {
+    filter()
+}
+
+function filter() {
+    const dropdownValue = ((x) => d3.select(`#${x}Var`).node().value)
+
+    g1vars = ['startYear', 'g1Age', 'g1Sex', 'g1Ethnicity', 'g1Health', 'g1Income', 'g1Insured', 'g1Served']
+    g2vars = ['endYear', 'g2Age', 'g2Sex', 'g2Ethnicity', 'g2Health', 'g2Income', 'g2Insured', 'g2Served']    
+
+    group1 = allData.filter(
+        function (d) {
+            for (const dropdownKey of g1vars) {
+                let value = dropdownValue(dropdownKey)
+                let key = optionToField[dropdownKey]
+
+                if (value === 'Any') {
+                    continue
+                }
+
+                if (d[key] != value) {
+                    return false
+                }
+            }
+
+            return true
+        }
+    )
+
+    group2 = allData.filter(
+        function (d) {
+            for (const dropdownKey of g2vars) {
+                let value = dropdownValue(dropdownKey)
+                let key = optionToField[dropdownKey]
+
+                if (value === 'Any') {
+                    continue
+                }
+
+                if (d[key] != value) {
+                    return false
+                }
+            }
+
+            return true
+        }
+    )
+
+    console.log('Group 1: ', group1)
+    console.log('Group 2: ', group2)
+}
 
 
 function generateBezierPath(p1, p2) {
