@@ -6,7 +6,7 @@ const width = 800;
 const height = 400;
 const xMax = 100, curveMargin = 80
 const randRange = xMax/3 ;
-const circleRadius = 5, numCircles = 500;
+const circleRadius = 5, numCircles = 200;
 const startLowPerc = 0.2, endLowPerc = 0.3
 const animationDuration = 5, randDelayDuration = 20;
 const optionToField = {
@@ -33,10 +33,17 @@ let colorScale = d3.scaleSequential(d3.interpolateTurbo)
 let allData = []
 
 let group1before = []
-let group2before = []
-
 let group1after = []
+
+let group2before = []
 let group2after = []
+
+let depressionRates = {
+    'g1before': 0.0,
+    'g1after': 0.0,
+    'g2before': 0.0,
+    'g2after': 0.0,
+}
 
 
 // Append an SVG element to the body
@@ -63,7 +70,8 @@ function init() {
         served:                                             //Made it look cleaner for pickers
             d.HealthInsurance == "Yes" ? "Served" :        
             d.HealthInsurance == "No" ? "Not Served" : 
-            "Other/Dk/Refused",                      
+            "Other/Dk/Refused",           
+        weight: d.Weight           
     })).then(data => {
         document.getElementById("loadingGif").style.visibility = "hidden";
         console.log(data); // Check if data loads correctly
@@ -132,6 +140,16 @@ function setupSelectors() {
 
 function updateVis() {
     filter()
+    svg.selectAll('circle').remove()
+    loadCircles()
+}
+
+function weighted_depression_tab(l) {
+
+    total_wt = l.reduce((acc, v) => acc + parseFloat(v.weight), 0)
+    dep_wt = l.reduce((acc, v) => v.isDepressed == 1 ? acc + parseFloat(v.weight) : acc, 0)
+
+    return dep_wt / total_wt
 }
 
 function filter() {
@@ -184,10 +202,14 @@ function filter() {
     group1after = group1.filter(d => d.year == dropdownValue('endYear'))
     group2after = group2.filter(d => d.year == dropdownValue('endYear'))
     
-    console.log('Group 1 Before: ', group1before)
-    console.log('Group 1 After: ', group1after)
-    console.log('Group 2 Before: ', group2before)
-    console.log('Group 2 After: ', group2after)
+    depressionRates = {
+        'g1before': weighted_depression_tab(group1before),
+        'g1after': weighted_depression_tab(group1after),
+        'g2before': weighted_depression_tab(group2before),
+        'g2after': weighted_depression_tab(group2after),
+    }
+
+    console.log("Depression rates: ", depressionRates)
 }
 
 
@@ -199,14 +221,26 @@ function generateBezierPath(p1, p2) {
     // Construct the path string
     return `M${p1.x},${p1.y} C${cp1.x},${cp1.y} ${cp2.x},${cp2.y} ${p2.x},${p2.y}`;
   }
-  
+
 function loadCircles() {
     var x = d3.scaleLinear().domain([0, xMax]).range([curveMargin, width-curveMargin]);
     var y = d3.scaleLinear().domain([0, xMax]).range([curveMargin, height-curveMargin]);
 
+
+
     for (let i = 0; i < numCircles; i++) {
         
-        const startAffected = Math.random() > startLowPerc
+        let groupStartPct
+        let groupEndPct
+
+        const groupCount = Object.keys(depressionRates).length / 2
+
+        let group = i % groupCount + 1
+        groupStartPct = depressionRates[`g${group}before`]
+        groupEndPct = depressionRates[`g${group}after`]
+        let color = group / groupCount * xMax
+
+        const startAffected = Math.random() > groupStartPct
 
         const start = {x: x(0), 
                     y: startAffected  ? 
@@ -215,8 +249,8 @@ function loadCircles() {
 
         const end =   {x: x(xMax), 
                     y: (!startAffected ? 
-                            Math.random() < endLowPerc : 
-                            Math.random() > endLowPerc)  ? 
+                            Math.random() < groupEndPct : 
+                            Math.random() > groupEndPct)  ? 
                         y(xMax + (Math.random() * randRange) - (randRange / 2)) : 
                         y((Math.random() * randRange) - (randRange / 2))}
 
@@ -234,7 +268,7 @@ function loadCircles() {
         // Create the moving circle
         const circle = svg.append("circle")
             .attr("r", circleRadius)
-            .attr("fill", colorScale(Math.random() * xMax))
+            .attr("fill", colorScale(color))
             .attr("cx", initPoint.x)
             .attr("cy", initPoint.y)
         
