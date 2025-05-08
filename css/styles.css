@@ -68,9 +68,14 @@ button {
 .selectionGroups {
     display: inline-block;
     margin-top: 1em;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 1em;
+    padding: 0.5em;
+
 }
 
-select {
+input[type=color], select {
     text-align: right;
     float: right;
 }
@@ -85,6 +90,9 @@ select {
     float: none;
 }
 
+#loadingGif {
+    float: right;
+}
 
 /* Imported Basic.css below this line */
 
@@ -171,7 +179,7 @@ pre,code,input,select,textarea,button,img {border-radius: var(--rc)}
 
 /* Forms */
 
-input, select, textarea {font-size: 1em; color:var(--c4); background: var(--c2); border: 0}
+input, select, textarea, input[type=color] {font-size: 1em; color:var(--c4); background: var(--c2); border: 0}
 
 button, input[type=submit], input[type=reset], input[type="button"] { -webkit-appearance: none; font-size: 1em; display: inline-block; color: var(--c5); background: var(--c1);  border: 0; margin: 4px;  padding: 0.6em; cursor: pointer; text-align: center}
 
