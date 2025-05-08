@@ -135,6 +135,9 @@ function setupSelectors() {
             }
 
         })
+        .on("change", function (event) {
+            updateVis();
+        })
 }
 
 
@@ -285,7 +288,7 @@ function loadCircles() {
                         return `translate(${point.x-initPoint.x},${point.y-initPoint.y})`;
                     };
                 })
-                // .on("end", animate);  // Loop animation
+                .on("end", animate);  // Loop animation
         }
 
         // Start the animation
