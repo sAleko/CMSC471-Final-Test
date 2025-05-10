@@ -2,13 +2,13 @@ console.log('D3 Version:', d3.version);
 
 // Ensure D3.js is included in your HTML file before running this script
 // Set up SVG dimensions
-const width = 800;
-const height = 400;
-const xMax = 100, curveMargin = 80;
+const width = 1000;
+const height = 500;
+const xMax = 100, curveMargin = {x: 0.25 * width, y: 0.2 * height};
 const randRange = xMax / 3;
 const circleRadius = 5, numCircles = 200;
 const startLowPerc = 0.2, endLowPerc = 0.3;
-const animationDuration = 5, randDelayDuration = 20;
+const animationDuration = 10, randDelayDuration = 20;
 const optionToField = {
     startYear: 'year',
     endYear: 'year',
@@ -204,148 +204,190 @@ function generateBezierPath(p1, p2) {
 }
 
 function addLabels() {
-    const x = d3.scaleLinear().domain([0, xMax]).range([curveMargin, width - curveMargin]);
-    const y = d3.scaleLinear().domain([0, xMax]).range([curveMargin, height - curveMargin]);
+    const x = d3.scaleLinear().domain([0, xMax]).range([curveMargin.x, width - curveMargin.x]);
+    const y = d3.scaleLinear().domain([0, xMax]).range([curveMargin.y, height - curveMargin.y]);
+
+    const bigTextSize = width * 0.03;
+    const smallTextSize = width * 0.018;
 
     const startYear = d3.select('#startYearVar').node().value;
     const endYear = d3.select('#endYearVar').node().value;
 
     svg.append('text')
-        .attr('x', curveMargin * 1.05)
+        .attr('x', curveMargin.x * 0.9)
         .attr('y', height * 0.95)
         .attr('text-anchor', 'end')
         .attr('font-family', 'Arial, sans-serif')
-        .attr('font-size', '30px')
+        .attr('font-size', `${bigTextSize}px`)
         .attr('fill', '#333')
         .attr('stroke', 'white')
-        .attr('stroke-width', '0.5')
+        .attr('stroke-width', '1')
         .text(startYear);
 
     svg.append('text')
-        .attr('x', width * 0.9 - curveMargin * 1.05)
+        .attr('x', width - curveMargin.x * 0.9)
         .attr('y', height * 0.95)
         .attr('text-anchor', 'start')
         .attr('font-family', 'Arial, sans-serif')
-        .attr('font-size', '30px')
+        .attr('font-size', `${bigTextSize}px`)
         .attr('fill', '#333')
         .attr('stroke', 'white')
-        .attr('stroke-width', '0.5')
+        .attr('stroke-width', '1')
         .text(endYear);
 
     svg.append('text')
-        .attr('x', width * 0.9 / 2)
-        .attr('y', curveMargin)
+        .attr('x', width / 2)
+        .attr('y', height * 0.05 + bigTextSize / 2)
         .attr('text-anchor', 'middle')
         .attr('font-family', 'Arial, sans-serif')
-        .attr('font-size', '30px')
+        .attr('font-size', `${bigTextSize}px`)
         .attr('fill', '#333')
         .attr('stroke', 'white')
-        .attr('stroke-width', '0.5')
+        .attr('stroke-width', '1')
         .text('Depressed');
 
     svg.append('text')
-        .attr('x', width * 0.9 / 2)
-        .attr('y', height - curveMargin)
+        .attr('x', width / 2)
+        .attr('y', height * 0.95 + bigTextSize / 2)
         .attr('text-anchor', 'middle')
         .attr('font-family', 'Arial, sans-serif')
-        .attr('font-size', '30px')
+        .attr('font-size', `${bigTextSize}px`)
         .attr('fill', '#333')
         .attr('stroke', 'white')
-        .attr('stroke-width', '0.5')
+        .attr('stroke-width', '1')
         .text('Not Depressed');
     // Group 1 Labels
     svg.append('text')
-        .attr('x', width * 0.9 - curveMargin * 0.7)
-        .attr('y', curveMargin * 0.7)
+        .attr('x', width - curveMargin.x * 0.9)
+        .attr('y', curveMargin.y * 0.7)
         .attr('text-anchor', 'start')
         .attr('font-family', 'Arial, sans-serif')
-        .attr('font-size', '12px')
+        .attr('font-size', `${smallTextSize}px`)
         .attr('fill', '#333')
         .text('Group 1');
 
     svg.append('text')
         .attr('id', 'g1DepressedCount')
-        .attr('x', width * 0.9 - curveMargin * 0.7)
-        .attr('y', curveMargin)
+        .attr('x', width - curveMargin.x * 0.9)
+        .attr('y', curveMargin.y)
         .attr('text-anchor', 'start')
         .attr('font-family', 'Arial, sans-serif')
-        .attr('font-size', '12px')
+        .attr('font-size', `${smallTextSize}px`)
         .attr('fill', groupColors[1])
         .text('0 (0%)');
 
     svg.append('text')
         .attr('id', 'g1NotDepressedCount')
-        .attr('x', width * 0.9 - curveMargin * 0.7)
-        .attr('y', height - curveMargin)
+        .attr('x', width - curveMargin.x * 0.9)
+        .attr('y', height - curveMargin.y)
         .attr('text-anchor', 'start')
         .attr('font-family', 'Arial, sans-serif')
-        .attr('font-size', '12px')
+        .attr('font-size', `${smallTextSize}px`)
         .attr('fill', groupColors[1])
         .text('0 (0%)');
 
     // Group 2 Labels
     svg.append('text')
-        .attr('x', width * 0.92)
-        .attr('y', curveMargin * 0.7)
+        .attr('x', width - curveMargin.x * 0.5)
+        .attr('y', curveMargin.y * 0.7)
         .attr('text-anchor', 'start')
         .attr('font-family', 'Arial, sans-serif')
-        .attr('font-size', '12px')
+        .attr('font-size', `${smallTextSize}px`)
         .attr('fill', '#333')
         .text('Group 2');
 
     svg.append('text')
         .attr('id', 'g2DepressedCount')
-        .attr('x', width * 0.92)
-        .attr('y', curveMargin)
+        .attr('x', width - curveMargin.x * 0.5)
+        .attr('y', curveMargin.y)
         .attr('text-anchor', 'start')
         .attr('font-family', 'Arial, sans-serif')
-        .attr('font-size', '12px')
+        .attr('font-size', `${smallTextSize}px`)
         .attr('fill', groupColors[2])
         .text('0 (0%)');
 
     svg.append('text')
         .attr('id', 'g2NotDepressedCount')
-        .attr('x', width * 0.92)
-        .attr('y', height - curveMargin)
+        .attr('x', width - curveMargin.x * 0.5)
+        .attr('y', height - curveMargin.y)
         .attr('text-anchor', 'start')
         .attr('font-family', 'Arial, sans-serif')
-        .attr('font-size', '12px')
+        .attr('font-size', `${smallTextSize}px`)
         .attr('fill', groupColors[2])
         .text('0 (0%)');
 }
 
 function loadCircles() {
-    const x = d3.scaleLinear().domain([0, xMax]).range([curveMargin, width - curveMargin]);
-    const y = d3.scaleLinear().domain([0, xMax]).range([curveMargin, height - curveMargin]);
+    const x = d3.scaleLinear().domain([0, xMax]).range([curveMargin.x, width - curveMargin.x]);
+    const y = d3.scaleLinear().domain([0, xMax]).range([curveMargin.y, height - curveMargin.y]);
     const yThreshold = y(xMax / 2);
 
-    const totalCirclesPerGroup = numCircles / 2;
+    const groupCount = Object.keys(depressionRates).length / 2;
+    const totalCirclesPerGroup = numCircles / groupCount;
+    
+    const groupCircleNums = {
+        'g1beforeAffected': Math.ceil(depressionRates['g1before'] * totalCirclesPerGroup),
+        'g1beforeUnAffected': Math.ceil((1 - depressionRates['g1before']) * totalCirclesPerGroup),
+        'g1afterAffected': Math.ceil(depressionRates['g1after'] * totalCirclesPerGroup),
+        'g1afterUnAffected': Math.ceil((1 - depressionRates['g1after']) * totalCirclesPerGroup),
+        'g2beforeAffected': Math.ceil(depressionRates['g2before'] * totalCirclesPerGroup),
+        'g2beforeUnAffected': Math.ceil((1 - depressionRates['g2before']) * totalCirclesPerGroup),
+        'g2afterAffected': Math.ceil(depressionRates['g2after'] * totalCirclesPerGroup),
+        'g2afterUnAffected': Math.ceil((1 - depressionRates['g2after']) * totalCirclesPerGroup),
+    };
 
     for (let i = 0; i < numCircles; i++) {
         let groupStartPct;
         let groupEndPct;
 
-        const groupCount = Object.keys(depressionRates).length / 2;
         let group = i % groupCount + 1;
-        groupStartPct = depressionRates[`g${group}before`];
-        groupEndPct = depressionRates[`g${group}after`];
+        groupStartPct = groupCircleNums[`g${group}beforeAffected`] / 
+            (groupCircleNums[`g${group}beforeAffected`] + groupCircleNums[`g${group}beforeUnAffected`]);
+        groupEndPct = groupCircleNums[`g${group}afterAffected`] / 
+            (groupCircleNums[`g${group}afterAffected`] + groupCircleNums[`g${group}afterUnAffected`]);
 
-        const startAffected = Math.random() > groupStartPct;
 
+        /*
+            For calculating percentages
+            Prior studies/literature suggest that people depressed one year have a 20-30%
+            chance of being depressed a following year
+            Source: I found a source for chronic rates of depression
+                https://www.sciencedirect.com/science/article/pii/S0165032721012611#:~:text=Around%2020%25%20%2D%2030%25%20of,chronically%20depressed%20(NCD)%20patients.
+                and others agree if you research.
+            
+            But this is a much different time from when the data was recorded, 
+            so that percentage can't be trusted or applied here.
+            I just left the start and end percentage remain the same for those who 
+            started with or without depression.
+        */
+
+        let startAffected = Math.random() < groupStartPct;
+        if (startAffected) {
+            groupCircleNums[`g${group}beforeAffected`]--;
+        } else {
+            groupCircleNums[`g${group}beforeUnAffected`]--;
+        }
+        
         const start = {
             x: x(0),
-            y: !startAffected ?
-                y(xMax + (Math.random() * randRange) - (randRange / 2)) :
-                y((Math.random() * randRange) - (randRange / 2))
+            y: startAffected ?
+                y((Math.random() * randRange) - (randRange / 2)) :
+                y(xMax + (Math.random() * randRange) - (randRange / 2))
         };
 
+        
+        let endAffected = Math.random() < groupEndPct;
+        if (endAffected) {
+            groupCircleNums[`g${group}afterAffected`]--;
+        } else {
+            groupCircleNums[`g${group}afterUnAffected`]--;
+        }
+
         const end = {
-            x: x(xMax) * 0.9,
-            y: (startAffected ?
-                Math.random() < groupEndPct :
-                Math.random() > groupEndPct) ?
-                y(xMax + (Math.random() * randRange) - (randRange / 2)) :
-                y((Math.random() * randRange) - (randRange / 2))
+            x: x(xMax),
+            y: endAffected ?
+                y((Math.random() * randRange) - (randRange / 2)) :
+                y(xMax + (Math.random() * randRange) - (randRange / 2))
         };
 
         const isDepressedEnd = end.y < yThreshold;
@@ -378,7 +420,7 @@ function loadCircles() {
             let g2Total = counts.g1Depressed + counts.g1NotDepressed;
 
             d3.select('#g1DepressedCount')
-                .text(`${counts.g1Depressed} (${((counts.g1Depressed / (g1Total != 0 ? g1Total : 1)) * 100).toFixed(1)}%)`);
+                .text(`${counts.g1Depressed} \t(${((counts.g1Depressed / (g1Total != 0 ? g1Total : 1)) * 100).toFixed(1)}%)`);
             d3.select('#g1NotDepressedCount')
                 .text(`${counts.g1NotDepressed} (${((counts.g1NotDepressed / (g1Total != 0 ? g1Total : 1)) * 100).toFixed(1)}%)`);
             d3.select('#g2DepressedCount')

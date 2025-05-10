@@ -9,14 +9,14 @@
 /* Reset default styles */
 * {
     font-family: Arial, sans-serif;
-    max-width: 800px;
+    max-width: 1024px;
     margin: 0px auto;
     line-height: 1.8;
 }
 
 /* Container styling for layout */
 .container {
-    max-width: 2000px;
+    max-width: 100%;
     margin: 2rem auto;
     font-family: Arial, sans-serif;
 }
@@ -24,6 +24,7 @@
 #vis svg {
     margin: 2rem 0;
     border: 1px solid #ccc; /*otherwise you can't see this part*/
+    border-radius: 15px;
 }
 
 #controls {
@@ -68,10 +69,10 @@ button {
 .selectionGroups {
     display: inline-block;
     margin-top: 1em;
-    border-style: solid;
-    border-width: 1px;
+    border: 1px solid #ccc;
     border-radius: 1em;
     padding: 0.5em;
+    min-width: 480px;
 
 }
 
