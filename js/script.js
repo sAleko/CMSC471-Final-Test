@@ -71,10 +71,10 @@ function init() {
         sex: d.Sex,
         insured: d.HealthInsurance == "Yes" ? "Insured" :
             d.HealthInsurance == "No" ? "Uninsured" :
-            "Other/Dk/Refused",
-        served: d.HealthInsurance == "Yes" ? "Served" :
-            d.HealthInsurance == "No" ? "Not Served" :
-            "Other/Dk/Refused",
+            "Other/DK/Refused",
+        served: d.MilitaryService == "Yes" ? "Served" :
+            d.MilitaryService == "No" ? "Not Served" :
+            "Other/DK/Refused",
         weight: d.Weight
     })).then(data => {
         document.getElementById("loadingGif").style.visibility = "hidden";
