@@ -27,7 +27,7 @@ const optionToField = {
     g2Insured: 'insured',
     g2Served: 'served'
 };
-groupColors = {
+let groupColors = {
     1: d3.select('#g1Color').node().value,
     2: d3.select('#g2Color').node().value
 };
@@ -144,6 +144,10 @@ function updateVis() {
     svg.selectAll('text').remove();
     svg.selectAll('rect').remove();
     counts = { g1Depressed: 0, g1NotDepressed: 0, g2Depressed: 0, g2NotDepressed: 0 };
+    groupColors = {
+        1: d3.select('#g1Color').node().value,
+        2: d3.select('#g2Color').node().value
+    };
     loadCircles();
 }
 
