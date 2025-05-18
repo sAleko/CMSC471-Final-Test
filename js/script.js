@@ -483,37 +483,47 @@ function loadCircles() {
                 .text(`${counts.g2NotDepressed} (${((counts.g2NotDepressed / (g2Total != 0 ? g2Total : 1)) * 100).toFixed(1)}%)`);
 
             //This is for the bar graphs that grow upward
-            const maxBarHeight = 100;
+             const maxBarHeight = 100;
 
+            // Safe totals to avoid divide by zero
             const g1TotalSafe = g1Total !== 0 ? g1Total : 1;
-            const g1NDHeight = (counts.g1NotDepressed / g1TotalSafe) * maxBarHeight;
-            const g1NDBaseY = curveMargin.y + 270;
-            
             const g2TotalSafe = g2Total !== 0 ? g2Total : 1;
+
+            // Calculate heights scaled by percentage of total
+            const g1DHeight = (counts.g1Depressed / g1TotalSafe) * maxBarHeight;
+            const g1NDHeight = (counts.g1NotDepressed / g1TotalSafe) * maxBarHeight;
+            const g2DHeight = (counts.g2Depressed / g2TotalSafe) * maxBarHeight;
             const g2NDHeight = (counts.g2NotDepressed / g2TotalSafe) * maxBarHeight;
+
+            // Baseline Y positions for bars
+            const g1DBaseY = curveMargin.y + 5;      // Depressed bars grow downward from here (y fixed)
+            const g1NDBaseY = curveMargin.y + 270;   // Not depressed bars grow upward (y moves up)
+            const g2DBaseY = curveMargin.y + 5;
             const g2NDBaseY = curveMargin.y + 270;
+
 
             // Normal Graphs just grow positively 
             d3.select('#g1D')
-                .transition()
-                .duration(500)
-               .attr('height', counts.g1Depressed);
-            d3.select('#g1ND')
-                .transition()
-                .duration(500)
-                .attr('y', g1NDBaseY - g1NDHeight) // grow upward from base
-                .attr('height', g1NDHeight);
+            .transition()
+            .duration(500)
+            .attr('y', g1DBaseY)
+            .attr('height', g1DHeight);
             d3.select('#g2D')
-                .transition()
-                .duration(500)
-                 .attr('height', counts.g2Depressed);
+            .transition()
+            .duration(500)
+            .attr('y', g2DBaseY)
+            .attr('height', g2DHeight);
+            // Animate not depressed bars (grow upward with y moving up as height increases)
+            d3.select('#g1ND')
+            .transition()
+            .duration(500)
+            .attr('y', g1NDBaseY - g1NDHeight)
+            .attr('height', g1NDHeight);
             d3.select('#g2ND')
-                .transition()
-                .duration(500)
-                .attr('y', g2NDBaseY - g2NDHeight)
-                .attr('height', g2NDHeight);
-
-
+            .transition()
+            .duration(500)
+            .attr('y', g2NDBaseY - g2NDHeight)
+            .attr('height', g2NDHeight);
            
         }
 
