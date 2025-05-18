@@ -8,7 +8,7 @@ const xMax = 100, curveMargin = {x: 0.25 * width, y: 0.2 * height};
 const randRange = xMax / 3;
 const circleRadius = 5, numCircles = 200;
 const startLowPerc = 0.2, endLowPerc = 0.3;
-const animationDuration = 10, randDelayDuration = 20;
+let animationDuration = 10, randDelayDuration = 20;
 const optionToField = {
     startYear: 'year',
     endYear: 'year',
@@ -330,15 +330,18 @@ function loadCircles() {
     const totalCirclesPerGroup = numCircles / groupCount;
     
     const groupCircleNums = {
-        'g1beforeAffected': Math.ceil(depressionRates['g1before'] * totalCirclesPerGroup),
-        'g1beforeUnAffected': Math.ceil((1 - depressionRates['g1before']) * totalCirclesPerGroup),
-        'g1afterAffected': Math.ceil(depressionRates['g1after'] * totalCirclesPerGroup),
-        'g1afterUnAffected': Math.ceil((1 - depressionRates['g1after']) * totalCirclesPerGroup),
-        'g2beforeAffected': Math.ceil(depressionRates['g2before'] * totalCirclesPerGroup),
-        'g2beforeUnAffected': Math.ceil((1 - depressionRates['g2before']) * totalCirclesPerGroup),
-        'g2afterAffected': Math.ceil(depressionRates['g2after'] * totalCirclesPerGroup),
-        'g2afterUnAffected': Math.ceil((1 - depressionRates['g2after']) * totalCirclesPerGroup),
+        'g1beforeAffected': Math.round(depressionRates['g1before'] * totalCirclesPerGroup),
+        'g1beforeUnAffected': Math.round((1 - depressionRates['g1before']) * totalCirclesPerGroup),
+        'g1afterAffected': Math.round(depressionRates['g1after'] * totalCirclesPerGroup),
+        'g1afterUnAffected': Math.round((1 - depressionRates['g1after']) * totalCirclesPerGroup),
+        'g2beforeAffected': Math.round(depressionRates['g2before'] * totalCirclesPerGroup),
+        'g2beforeUnAffected': Math.round((1 - depressionRates['g2before']) * totalCirclesPerGroup),
+        'g2afterAffected': Math.round(depressionRates['g2after'] * totalCirclesPerGroup),
+        'g2afterUnAffected': Math.round((1 - depressionRates['g2after']) * totalCirclesPerGroup),
     };
+
+    // animationDuration = 1
+    // randDelayDuration = 1
 
     for (let i = 0; i < numCircles; i++) {
         let groupStartPct;
@@ -366,6 +369,12 @@ function loadCircles() {
         */
 
         let startAffected = Math.random() < groupStartPct;
+        if (groupCircleNums[`g${group}beforeAffected`] == 0) {
+            startAffected = false
+        } else if (groupCircleNums[`g${group}beforeUnAffected`] == 0) {
+            startAffected = true
+        }
+
         if (startAffected) {
             groupCircleNums[`g${group}beforeAffected`]--;
         } else {
@@ -381,6 +390,13 @@ function loadCircles() {
 
         
         let endAffected = Math.random() < groupEndPct;
+        if (groupCircleNums[`g${group}afterAffected`] == 0) {
+            endAffected = false
+        } else if (groupCircleNums[`g${group}afterUnAffected`] == 0) {
+            endAffected = true
+        }
+
+
         if (endAffected) {
             groupCircleNums[`g${group}afterAffected`]--;
         } else {
@@ -431,6 +447,15 @@ function loadCircles() {
                 .text(`${counts.g2Depressed} (${((counts.g2Depressed / (g2Total != 0 ? g2Total : 1)) * 100).toFixed(1)}%)`);
             d3.select('#g2NotDepressedCount')
                 .text(`${counts.g2NotDepressed} (${((counts.g2NotDepressed / (g2Total != 0 ? g2Total : 1)) * 100).toFixed(1)}%)`);
+
+            d3.select('#g1DepressedCount')
+                .text(`${counts.g1Depressed} \t(${((counts.g1Depressed / (g1Total != 0 ? g1Total : 1)) * 100).toFixed(1)}%)`);
+            d3.select('#g1NotDepressedCount')
+                .text(`${counts.g1NotDepressed} (${((counts.g1NotDepressed / (g1Total != 0 ? g1Total : 1)) * 100).toFixed(1)}%)`);
+            d3.select('#g2DepressedCount')
+                .text(`${counts.g2Depressed} (${((counts.g2Depressed / (g2Total != 0 ? g2Total : 1)) * 100).toFixed(1)}%)`);
+            d3.select('#g2NotDepressedCount')
+                .text(`${counts.g2NotDepressed} (${((counts.g2NotDepressed / (g2Total != 0 ? g2Total : 1)) * 100).toFixed(1)}%)`);
         }
 
         function animate() {
@@ -453,6 +478,7 @@ function loadCircles() {
         animate();
     }
 
+    console.log(groupCircleNums)
     
     addLabels();
 
