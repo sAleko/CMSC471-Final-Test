@@ -279,6 +279,14 @@ function addLabels() {
         .attr('font-size', `${smallTextSize}px`)
         .attr('fill', groupColors[1])
         .text('0 (0%)');
+    
+    svg.append('rect')
+        .attr('id', 'g1D')
+        .attr('x', width - curveMargin.x * 0.9)
+        .attr('y', curveMargin.y + 5)
+        .attr('width', 70)
+        .attr('height', 0)
+        .attr('fill', groupColors[1]);
 
     svg.append('text')
         .attr('id', 'g1NotDepressedCount')
@@ -289,6 +297,14 @@ function addLabels() {
         .attr('font-size', `${smallTextSize}px`)
         .attr('fill', groupColors[1])
         .text('0 (0%)');
+  
+    svg.append('rect')
+        .attr('id', 'g1ND')
+        .attr('x', width - curveMargin.x * 0.9)
+        .attr('y', curveMargin.y+270)
+        .attr('width', 70)
+        .attr('height', 0)
+        .attr('fill',  groupColors[1]);
 
     // Group 2 Labels
     svg.append('text')
@@ -309,6 +325,14 @@ function addLabels() {
         .attr('font-size', `${smallTextSize}px`)
         .attr('fill', groupColors[2])
         .text('0 (0%)');
+    
+    svg.append('rect')
+        .attr('id', 'g2D')
+        .attr('x', width - curveMargin.x * 0.5)
+        .attr('y', curveMargin.y + 5)
+        .attr('width', 70)
+        .attr('height', 0)
+        .attr('fill', groupColors[2]);
 
     svg.append('text')
         .attr('id', 'g2NotDepressedCount')
@@ -319,6 +343,16 @@ function addLabels() {
         .attr('font-size', `${smallTextSize}px`)
         .attr('fill', groupColors[2])
         .text('0 (0%)');
+    
+      svg.append('rect')
+        .attr('id', 'g2ND')
+        .attr('x', width - curveMargin.x * 0.5)
+        .attr('y', curveMargin.y+270)
+        .attr('width', 70)
+        .attr('height', 0)
+        .attr('fill', groupColors[2]);
+
+  
 }
 
 function loadCircles() {
@@ -447,6 +481,40 @@ function loadCircles() {
                 .text(`${counts.g2Depressed} (${((counts.g2Depressed / (g2Total != 0 ? g2Total : 1)) * 100).toFixed(1)}%)`);
             d3.select('#g2NotDepressedCount')
                 .text(`${counts.g2NotDepressed} (${((counts.g2NotDepressed / (g2Total != 0 ? g2Total : 1)) * 100).toFixed(1)}%)`);
+
+            //This is for the bar graphs that grow upward
+            const maxBarHeight = 100;
+
+            const g1TotalSafe = g1Total !== 0 ? g1Total : 1;
+            const g1NDHeight = (counts.g1NotDepressed / g1TotalSafe) * maxBarHeight;
+            const g1NDBaseY = curveMargin.y + 270;
+            
+            const g2TotalSafe = g2Total !== 0 ? g2Total : 1;
+            const g2NDHeight = (counts.g2NotDepressed / g2TotalSafe) * maxBarHeight;
+            const g2NDBaseY = curveMargin.y + 270;
+
+            // Normal Graphs just grow positively 
+            d3.select('#g1D')
+                .transition()
+                .duration(500)
+               .attr('height', counts.g1Depressed);
+            d3.select('#g1ND')
+                .transition()
+                .duration(500)
+                .attr('y', g1NDBaseY - g1NDHeight) // grow upward from base
+                .attr('height', g1NDHeight);
+            d3.select('#g2D')
+                .transition()
+                .duration(500)
+                 .attr('height', counts.g2Depressed);
+            d3.select('#g2ND')
+                .transition()
+                .duration(500)
+                .attr('y', g2NDBaseY - g2NDHeight)
+                .attr('height', g2NDHeight);
+
+
+           
         }
 
         function animate() {
