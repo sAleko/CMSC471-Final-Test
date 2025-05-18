@@ -447,15 +447,6 @@ function loadCircles() {
                 .text(`${counts.g2Depressed} (${((counts.g2Depressed / (g2Total != 0 ? g2Total : 1)) * 100).toFixed(1)}%)`);
             d3.select('#g2NotDepressedCount')
                 .text(`${counts.g2NotDepressed} (${((counts.g2NotDepressed / (g2Total != 0 ? g2Total : 1)) * 100).toFixed(1)}%)`);
-
-            d3.select('#g1DepressedCount')
-                .text(`${counts.g1Depressed} \t(${((counts.g1Depressed / (g1Total != 0 ? g1Total : 1)) * 100).toFixed(1)}%)`);
-            d3.select('#g1NotDepressedCount')
-                .text(`${counts.g1NotDepressed} (${((counts.g1NotDepressed / (g1Total != 0 ? g1Total : 1)) * 100).toFixed(1)}%)`);
-            d3.select('#g2DepressedCount')
-                .text(`${counts.g2Depressed} (${((counts.g2Depressed / (g2Total != 0 ? g2Total : 1)) * 100).toFixed(1)}%)`);
-            d3.select('#g2NotDepressedCount')
-                .text(`${counts.g2NotDepressed} (${((counts.g2NotDepressed / (g2Total != 0 ? g2Total : 1)) * 100).toFixed(1)}%)`);
         }
 
         function animate() {
