@@ -836,13 +836,13 @@ const dropdownValue = (x) => d3.select(`#${x}Var`).node().value;
 const presets = [
         {
             type: "normal",
-            text: `Depression rates among the ${colorText("young", "#CB5680")} (18-25) and ${colorText("general population", "#86C1C4")} before and during COVID`,
+            text: `Depression rates among the ${colorText("young", "#7DC0A7")} (18-25) and ${colorText("general population", "#1D448F")} before and during COVID`,
             fields: {
                 startYearVar: 2019,
                 endYearVar: 2021,
                 g1AgeVar: "18-25",
-                g1Color: "#CB5680",
-                g2Color: "#86C1C4",
+                g1Color: "#7DC0A7",
+                g2Color: "#1D448F",
             },
         },
         {
