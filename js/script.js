@@ -653,7 +653,7 @@ function loadCircles() {
                 .attr('height', g2NDHeight);
 
 
-
+/*
             const g1BeforePop = totalPop.g1before;
             d3.select('#Lg1DepressedCount')
                 .text(`${displayedNumber(depressionRates.g1before * g1BeforePop)} (${(depressionRates.g1before * 100).toFixed(1)}%)`);
@@ -689,7 +689,7 @@ function loadCircles() {
             d3.select('#Lg2ND')
                 .attr('y', g2NDBaseY - g2NDStaticHeight)
                 .attr('height', g2NDStaticHeight);
-           
+ */          
         }
 
         function animate() {
@@ -711,9 +711,61 @@ function loadCircles() {
 
         animate();
     }
+    
+    function showStaticChart(){
+        const maxBarHeight = 100;
+
+        const g1BeforePop = totalPop.g1before;
+        const g2BeforePop = totalPop.g2before;
+
+        const g1DBaseY = curveMargin.y + 5;
+        const g1NDBaseY = curveMargin.y + 270;
+        const g2DBaseY = curveMargin.y + 5;
+        const g2NDBaseY = curveMargin.y + 270;
+
+        // G1 before
+        const g1DStaticHeight = depressionRates.g1before * maxBarHeight;
+        const g1NDStaticHeight = (1 - depressionRates.g1before) * maxBarHeight;
+
+        // G2 before
+        const g2DStaticHeight = depressionRates.g2before * maxBarHeight;
+        const g2NDStaticHeight = (1 - depressionRates.g2before) * maxBarHeight;
+
+        // Update text labels for Group 1
+        d3.select('#Lg1DepressedCount')
+            .text(`${displayedNumber(depressionRates.g1before * g1BeforePop)} (${(depressionRates.g1before * 100).toFixed(1)}%)`);
+
+        d3.select('#Lg1NotDepressedCount')
+            .text(`${displayedNumber((1 - depressionRates.g1before) * g1BeforePop)} (${((1 - depressionRates.g1before) * 100).toFixed(1)}%)`);
+
+   
+        d3.select('#Lg2DepressedCount')
+            .text(`${displayedNumber(depressionRates.g2before * g2BeforePop)} (${(depressionRates.g2before * 100).toFixed(1)}%)`);
+
+        d3.select('#Lg2NotDepressedCount')
+            .text(`${displayedNumber((1 - depressionRates.g2before) * g2BeforePop)} (${((1 - depressionRates.g2before) * 100).toFixed(1)}%)`);
+
+        // bars height 
+        d3.select('#Lg1D')
+            .attr('y', g1DBaseY)
+            .attr('height', g1DStaticHeight);
+
+        d3.select('#Lg1ND')
+            .attr('y', g1NDBaseY - g1NDStaticHeight)
+            .attr('height', g1NDStaticHeight);
+
+        d3.select('#Lg2D')
+            .attr('y', g2DBaseY)
+            .attr('height', g2DStaticHeight);
+
+        d3.select('#Lg2ND')
+            .attr('y', g2NDBaseY - g2NDStaticHeight)
+            .attr('height', g2NDStaticHeight);
+    }
 
     console.log(groupCircleNums)
     addLabels();
+    showStaticChart();
 
 }
 
