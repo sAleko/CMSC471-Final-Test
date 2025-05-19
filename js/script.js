@@ -372,12 +372,105 @@ function addLabels() {
         .attr('width', 70)
         .attr('height', 0)
         .attr('fill', groupColors[2]);
+    //Bar chart on left hand side to show previous year 
+    let lx = 3.25;
+     svg.append('text')
+        .attr('x', width - curveMargin.x * lx)
+        .attr('y', curveMargin.y * 0.7)
+        .attr('text-anchor', 'start')
+        .attr('font-family', 'Arial, sans-serif')
+        .attr('font-size', `${smallTextSize}px`)
+        .attr('fill', '#333')
+        .text('Group 1');
+
+    svg.append('text')
+        .attr('id', 'Lg1DepressedCount')
+        .attr('x', width - curveMargin.x * lx)
+        .attr('y', curveMargin.y)
+        .attr('text-anchor', 'start')
+        .attr('font-family', 'Arial, sans-serif')
+        .attr('font-size', `${smallTextSize}px`)
+        .attr('fill', groupColors[1])
+        .text('0 (0%)');
+    
+    svg.append('rect')
+        .attr('id', 'Lg1D')
+        .attr('x', width - curveMargin.x * lx)
+        .attr('y', curveMargin.y + 5)
+        .attr('width', 70)
+        .attr('height', 0)
+        .attr('fill', groupColors[1]);
+
+    svg.append('text')
+        .attr('id', 'Lg1NotDepressedCount')
+        .attr('x', width - curveMargin.x * lx)
+        .attr('y', height - curveMargin.y)
+        .attr('text-anchor', 'start')
+        .attr('font-family', 'Arial, sans-serif')
+        .attr('font-size', `${smallTextSize}px`)
+        .attr('fill', groupColors[1])
+        .text('0 (0%)');
+  
+    svg.append('rect')
+        .attr('id', 'Lg1ND')
+        .attr('x', width - curveMargin.x * lx)
+        .attr('y', curveMargin.y+270)
+        .attr('width', 70)
+        .attr('height', 0)
+        .attr('fill',  groupColors[1]);
+
+    // Group 2 Labels
+    let lxx = 2.8;
+    svg.append('text')
+        .attr('x', width - curveMargin.x * lxx)
+        .attr('y', curveMargin.y * 0.7)
+        .attr('text-anchor', 'start')
+        .attr('font-family', 'Arial, sans-serif')
+        .attr('font-size', `${smallTextSize}px`)
+        .attr('fill', '#333')
+        .text('Group 2');
+
+    svg.append('text')
+        .attr('id', 'Lg2DepressedCount')
+        .attr('x', width - curveMargin.x * lxx)
+        .attr('y', curveMargin.y)
+        .attr('text-anchor', 'start')
+        .attr('font-family', 'Arial, sans-serif')
+        .attr('font-size', `${smallTextSize}px`)
+        .attr('fill', groupColors[2])
+        .text('0 (0%)');
+    
+    svg.append('rect')
+        .attr('id', 'Lg2D')
+        .attr('x', width - curveMargin.x * lxx)
+        .attr('y', curveMargin.y + 5)
+        .attr('width', 70)
+        .attr('height', 0)
+        .attr('fill', groupColors[2]);
+
+    svg.append('text')
+        .attr('id', 'Lg2NotDepressedCount')
+        .attr('x', width - curveMargin.x * lxx)
+        .attr('y', height - curveMargin.y)
+        .attr('text-anchor', 'start')
+        .attr('font-family', 'Arial, sans-serif')
+        .attr('font-size', `${smallTextSize}px`)
+        .attr('fill', groupColors[2])
+        .text('0 (0%)');
+    
+      svg.append('rect')
+        .attr('id', 'Lg2ND')
+        .attr('x', width - curveMargin.x * lxx)
+        .attr('y', curveMargin.y+270)
+        .attr('width', 70)
+        .attr('height', 0)
+        .attr('fill', groupColors[2]);
 
   
 }
 
 function loadCircles() {
-    const x = d3.scaleLinear().domain([0, xMax]).range([curveMargin.x / 2, width - curveMargin.x]);
+    const x = d3.scaleLinear().domain([0, xMax]).range([curveMargin.x , width - curveMargin.x]);
     const y = d3.scaleLinear().domain([0, xMax]).range([curveMargin.y, height - curveMargin.y]);
     const yThreshold = y(xMax / 2);
 
@@ -545,6 +638,44 @@ function loadCircles() {
             .duration(500)
             .attr('y', g2NDBaseY - g2NDHeight)
             .attr('height', g2NDHeight);
+
+
+
+            const g1BeforePop = totalPop.g1before;
+            d3.select('#Lg1DepressedCount')
+                .text(`${(depressionRates.g1before * g1BeforePop / 1000000).toFixed(1)}M (${(depressionRates.g1before * 100).toFixed(1)}%)`);
+
+            d3.select('#Lg1NotDepressedCount')
+                .text(`${((1 - depressionRates.g1before) * g1BeforePop / 1000000).toFixed(1)}M (${((1 - depressionRates.g1before) * 100).toFixed(1)}%)`);
+
+            // Group 2 before-year labels
+            const g2BeforePop = totalPop.g2before;
+            d3.select('#Lg2DepressedCount')
+                .text(`${(depressionRates.g2before * g2BeforePop / 1000000).toFixed(1)}M (${(depressionRates.g2before * 100).toFixed(1)}%)`);
+
+            d3.select('#Lg2NotDepressedCount')
+                .text(`${((1 - depressionRates.g2before) * g2BeforePop / 1000000).toFixed(1)}M (${((1 - depressionRates.g2before) * 100).toFixed(1)}%)`);
+
+            const g1DStaticHeight = depressionRates.g1before * maxBarHeight;
+            const g1NDStaticHeight = (1 - depressionRates.g1before) * maxBarHeight;
+            const g2DStaticHeight = depressionRates.g2before * maxBarHeight;
+            const g2NDStaticHeight = (1 - depressionRates.g2before) * maxBarHeight;
+
+            d3.select('#Lg1D')
+                .attr('y', g1DBaseY)
+                .attr('height', g1DStaticHeight);
+
+            d3.select('#Lg1ND')
+                .attr('y', g1NDBaseY - g1NDStaticHeight)
+                .attr('height', g1NDStaticHeight);
+
+            d3.select('#Lg2D')
+                .attr('y', g2DBaseY)
+                .attr('height', g2DStaticHeight);
+
+            d3.select('#Lg2ND')
+                .attr('y', g2NDBaseY - g2NDStaticHeight)
+                .attr('height', g2NDStaticHeight);
            
         }
 
