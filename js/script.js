@@ -229,7 +229,7 @@ function generateBezierPath(p1, p2) {
 }
 
 function addLabels() {
-    const x = d3.scaleLinear().domain([0, xMax]).range([curveMargin.x / 2, width - curveMargin.x]);
+    const x = d3.scaleLinear().domain([0, xMax]).range([curveMargin.x, width - curveMargin.x]);
     const y = d3.scaleLinear().domain([0, xMax]).range([curveMargin.y, height - curveMargin.y]);
 
     const bigTextSize = width * 0.03;
@@ -239,7 +239,7 @@ function addLabels() {
     const endYear = d3.select('#endYearVar').node().value;
 
     svg.append('text')
-        .attr('x', curveMargin.x * 0.9 / 2)
+        .attr('x', curveMargin.x * 0.9)
         .attr('y', height * 0.95)
         .attr('text-anchor', 'end')
         .attr('font-family', 'Arial, sans-serif')
@@ -281,7 +281,7 @@ function addLabels() {
         .attr('stroke', 'white')
         .attr('stroke-width', '1')
         .text('Not Depressed');
-    // Group 1 Labels
+    // Group 1 After Labels
     svg.append('text')
         .attr('x', width - curveMargin.x * 0.9)
         .attr('y', curveMargin.y * 0.7)
@@ -327,7 +327,7 @@ function addLabels() {
         .attr('height', 0)
         .attr('fill',  groupColors[1]);
 
-    // Group 2 Labels
+    // After Group 2 Labels
     svg.append('text')
         .attr('x', width - curveMargin.x * 0.45)
         .attr('y', curveMargin.y * 0.7)
@@ -372,12 +372,12 @@ function addLabels() {
         .attr('width', 70)
         .attr('height', 0)
         .attr('fill', groupColors[2]);
+
     //Bar chart on left hand side to show previous year 
-    let lx = 3.25;
      svg.append('text')
-        .attr('x', width - curveMargin.x * lx)
+        .attr('x', curveMargin.x * 0.45)
         .attr('y', curveMargin.y * 0.7)
-        .attr('text-anchor', 'start')
+        .attr('text-anchor', 'end')
         .attr('font-family', 'Arial, sans-serif')
         .attr('font-size', `${smallTextSize}px`)
         .attr('fill', '#333')
@@ -385,9 +385,9 @@ function addLabels() {
 
     svg.append('text')
         .attr('id', 'Lg1DepressedCount')
-        .attr('x', width - curveMargin.x * lx)
+        .attr('x', curveMargin.x * 0.45)
         .attr('y', curveMargin.y)
-        .attr('text-anchor', 'start')
+        .attr('text-anchor', 'end')
         .attr('font-family', 'Arial, sans-serif')
         .attr('font-size', `${smallTextSize}px`)
         .attr('fill', groupColors[1])
@@ -395,7 +395,7 @@ function addLabels() {
     
     svg.append('rect')
         .attr('id', 'Lg1D')
-        .attr('x', width - curveMargin.x * lx)
+        .attr('x', curveMargin.x * 0.45 - 70)
         .attr('y', curveMargin.y + 5)
         .attr('width', 70)
         .attr('height', 0)
@@ -403,9 +403,9 @@ function addLabels() {
 
     svg.append('text')
         .attr('id', 'Lg1NotDepressedCount')
-        .attr('x', width - curveMargin.x * lx)
+        .attr('x', curveMargin.x * 0.45)
         .attr('y', height - curveMargin.y)
-        .attr('text-anchor', 'start')
+        .attr('text-anchor', 'end')
         .attr('font-family', 'Arial, sans-serif')
         .attr('font-size', `${smallTextSize}px`)
         .attr('fill', groupColors[1])
@@ -413,18 +413,17 @@ function addLabels() {
   
     svg.append('rect')
         .attr('id', 'Lg1ND')
-        .attr('x', width - curveMargin.x * lx)
+        .attr('x', curveMargin.x * 0.45 - 70)
         .attr('y', curveMargin.y+270)
         .attr('width', 70)
         .attr('height', 0)
         .attr('fill',  groupColors[1]);
 
-    // Group 2 Labels
-    let lxx = 2.8;
+    // Before Group 2 Labels
     svg.append('text')
-        .attr('x', width - curveMargin.x * lxx)
+        .attr('x', curveMargin.x * 0.9)
         .attr('y', curveMargin.y * 0.7)
-        .attr('text-anchor', 'start')
+        .attr('text-anchor', 'end')
         .attr('font-family', 'Arial, sans-serif')
         .attr('font-size', `${smallTextSize}px`)
         .attr('fill', '#333')
@@ -432,9 +431,9 @@ function addLabels() {
 
     svg.append('text')
         .attr('id', 'Lg2DepressedCount')
-        .attr('x', width - curveMargin.x * lxx)
+        .attr('x', curveMargin.x * 0.9)
         .attr('y', curveMargin.y)
-        .attr('text-anchor', 'start')
+        .attr('text-anchor', 'end')
         .attr('font-family', 'Arial, sans-serif')
         .attr('font-size', `${smallTextSize}px`)
         .attr('fill', groupColors[2])
@@ -442,7 +441,7 @@ function addLabels() {
     
     svg.append('rect')
         .attr('id', 'Lg2D')
-        .attr('x', width - curveMargin.x * lxx)
+        .attr('x', curveMargin.x * 0.9 - 70)
         .attr('y', curveMargin.y + 5)
         .attr('width', 70)
         .attr('height', 0)
@@ -450,9 +449,9 @@ function addLabels() {
 
     svg.append('text')
         .attr('id', 'Lg2NotDepressedCount')
-        .attr('x', width - curveMargin.x * lxx)
+        .attr('x', curveMargin.x * 0.9)
         .attr('y', height - curveMargin.y)
-        .attr('text-anchor', 'start')
+        .attr('text-anchor', 'end')
         .attr('font-family', 'Arial, sans-serif')
         .attr('font-size', `${smallTextSize}px`)
         .attr('fill', groupColors[2])
@@ -460,7 +459,7 @@ function addLabels() {
     
       svg.append('rect')
         .attr('id', 'Lg2ND')
-        .attr('x', width - curveMargin.x * lxx)
+        .attr('x', curveMargin.x * 0.9 - 70)
         .attr('y', curveMargin.y+270)
         .attr('width', 70)
         .attr('height', 0)
@@ -575,6 +574,19 @@ function loadCircles() {
             .attr("cx", initPoint.x)
             .attr("cy", initPoint.y);
 
+        function displayedNumber(num) {
+            result = "Error"
+
+            if (num < 1000) {
+                result = `${Math.round(num)}`;
+            } else if (num < 1000000) {
+                result = `${(num/1000).toFixed(1)}k`
+            } else {
+                result = `${(num/1000000).toFixed(1)}M`
+            }
+            return result
+        }
+        
         function updateCounts() {
             if (group === 1) {
                 if (isDepressedEnd) counts.g1Depressed += totalPop.g1after / (numCircles / 2);
@@ -586,15 +598,16 @@ function loadCircles() {
 
             let g1Total = counts.g1Depressed + counts.g1NotDepressed;
             let g2Total = counts.g2Depressed + counts.g2NotDepressed;
+            
 
             d3.select('#g1DepressedCount')
-                .text(`${(counts.g1Depressed/1000000).toFixed(1)}M \t(${((counts.g1Depressed / (g1Total != 0 ? g1Total : 1)) * 100).toFixed(1)}%)`);
+                .text(`${displayedNumber(counts.g1Depressed)} \t(${((counts.g1Depressed / (g1Total != 0 ? g1Total : 1)) * 100).toFixed(1)}%)`);
             d3.select('#g1NotDepressedCount')
-                .text(`${(counts.g1NotDepressed/1000000).toFixed(1)}M (${((counts.g1NotDepressed / (g1Total != 0 ? g1Total : 1)) * 100).toFixed(1)}%)`);
+                .text(`${displayedNumber(counts.g1NotDepressed)} (${((counts.g1NotDepressed / (g1Total != 0 ? g1Total : 1)) * 100).toFixed(1)}%)`);
             d3.select('#g2DepressedCount')
-                .text(`${(counts.g2Depressed/1000000).toFixed(1)}M (${((counts.g2Depressed / (g2Total != 0 ? g2Total : 1)) * 100).toFixed(1)}%)`);
+                .text(`${displayedNumber(counts.g2Depressed)} (${((counts.g2Depressed / (g2Total != 0 ? g2Total : 1)) * 100).toFixed(1)}%)`);
             d3.select('#g2NotDepressedCount')
-                .text(`${(counts.g2NotDepressed/1000000).toFixed(1)}M (${((counts.g2NotDepressed / (g2Total != 0 ? g2Total : 1)) * 100).toFixed(1)}%)`);
+                .text(`${displayedNumber(counts.g2NotDepressed)} (${((counts.g2NotDepressed / (g2Total != 0 ? g2Total : 1)) * 100).toFixed(1)}%)`);
 
             //This is for the bar graphs that grow upward
              const maxBarHeight = 100;
@@ -618,43 +631,43 @@ function loadCircles() {
 
             // Normal Graphs just grow positively 
             d3.select('#g1D')
-            .transition()
-            .duration(500)
-            .attr('y', g1DBaseY)
-            .attr('height', g1DHeight);
+                .transition()
+                .duration(500)
+                .attr('y', g1DBaseY)
+                .attr('height', g1DHeight);
             d3.select('#g2D')
-            .transition()
-            .duration(500)
-            .attr('y', g2DBaseY)
-            .attr('height', g2DHeight);
+                .transition()
+                .duration(500)
+                .attr('y', g2DBaseY)
+                .attr('height', g2DHeight);
             // Animate not depressed bars (grow upward with y moving up as height increases)
             d3.select('#g1ND')
-            .transition()
-            .duration(500)
-            .attr('y', g1NDBaseY - g1NDHeight)
-            .attr('height', g1NDHeight);
+                .transition()
+                .duration(500)
+                .attr('y', g1NDBaseY - g1NDHeight)
+                .attr('height', g1NDHeight);
             d3.select('#g2ND')
-            .transition()
-            .duration(500)
-            .attr('y', g2NDBaseY - g2NDHeight)
-            .attr('height', g2NDHeight);
+                .transition()
+                .duration(500)
+                .attr('y', g2NDBaseY - g2NDHeight)
+                .attr('height', g2NDHeight);
 
 
 
             const g1BeforePop = totalPop.g1before;
             d3.select('#Lg1DepressedCount')
-                .text(`${(depressionRates.g1before * g1BeforePop / 1000000).toFixed(1)}M (${(depressionRates.g1before * 100).toFixed(1)}%)`);
+                .text(`${displayedNumber(depressionRates.g1before * g1BeforePop)} (${(depressionRates.g1before * 100).toFixed(1)}%)`);
 
             d3.select('#Lg1NotDepressedCount')
-                .text(`${((1 - depressionRates.g1before) * g1BeforePop / 1000000).toFixed(1)}M (${((1 - depressionRates.g1before) * 100).toFixed(1)}%)`);
+                .text(`${displayedNumber((1 - depressionRates.g1before) * g1BeforePop)} (${((1 - depressionRates.g1before) * 100).toFixed(1)}%)`);
 
             // Group 2 before-year labels
             const g2BeforePop = totalPop.g2before;
             d3.select('#Lg2DepressedCount')
-                .text(`${(depressionRates.g2before * g2BeforePop / 1000000).toFixed(1)}M (${(depressionRates.g2before * 100).toFixed(1)}%)`);
+                .text(`${displayedNumber(depressionRates.g2before * g2BeforePop)} (${(depressionRates.g2before * 100).toFixed(1)}%)`);
 
             d3.select('#Lg2NotDepressedCount')
-                .text(`${((1 - depressionRates.g2before) * g2BeforePop / 1000000).toFixed(1)}M (${((1 - depressionRates.g2before) * 100).toFixed(1)}%)`);
+                .text(`${displayedNumber((1 - depressionRates.g2before) * g2BeforePop)} (${((1 - depressionRates.g2before) * 100).toFixed(1)}%)`);
 
             const g1DStaticHeight = depressionRates.g1before * maxBarHeight;
             const g1NDStaticHeight = (1 - depressionRates.g1before) * maxBarHeight;
