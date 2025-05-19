@@ -742,6 +742,16 @@ const presets = [
 let preset = presets[0]
 
 function updatePreset() {
+    d3.select('#g1DepressedCount').text("0 (0%)")
+    d3.select('#g1NotDepressedCount').text("0 (0%)")
+    d3.select('#g2DepressedCount').text("0 (0%)")
+    d3.select('#g2NotDepressedCount').text("0 (0%)")
+    
+    d3.select('#Lg1DepressedCount').text("0 (0%)")
+    d3.select('#Lg1NotDepressedCount').text("0 (0%)")
+    d3.select('#Lg2DepressedCount').text("0 (0%)")
+    d3.select('#Lg2NotDepressedCount').text("0 (0%)")
+
     document.getElementById("presetText").innerHTML = preset.text
 
     // Exit if custom
