@@ -846,6 +846,20 @@ const presets = [
             },
         },
         {
+            type: "normal",
+            text: `Depression rates among ${colorText("women", "#CB5680")} in poor health and ${colorText("men", "#86C1C4")} in poor health before and during COVID`,
+            fields: {
+                startYearVar: 2019,
+                endYearVar: 2021,
+                g1SexVar: "Female",
+                g1HealthVar: "Poor",
+                g1Color: "#CB5680",
+                g2SexVar: "Male",
+                g2HealthVar: "Poor",
+                g2Color: "#86C1C4",
+            },
+        },
+        {
             type: "custom",
             text: "Create your own groups!"
         }
@@ -866,16 +880,16 @@ function updatePreset() {
 
     document.getElementById("presetText").innerHTML = preset.text
 
+    const anyVars = ['g1Age', 'g1Sex', 'g1Ethnicity', 'g1Health', 'g1Income', 'g1Insured', 'g1Served', 'g2Age', 'g2Sex', 'g2Ethnicity', 'g2Health', 'g2Income', 'g2Insured', 'g2Served'];
+        
+    for (const v of anyVars) {
+        d3.select(`#${v}Var`).node().value = "Any"
+    }
+
     // Exit if custom
     if (preset.type == "custom") {
 
         document.getElementById("controls").style.display = ""
-
-        const anyVars = ['g1Age', 'g1Sex', 'g1Ethnicity', 'g1Health', 'g1Income', 'g1Insured', 'g1Served', 'g2Age', 'g2Sex', 'g2Ethnicity', 'g2Health', 'g2Income', 'g2Insured', 'g2Served'];
-        
-        for (const v of anyVars) {
-            d3.select(`#${v}Var`).node().value = "Any"
-        }
 
         d3.select("#startYearVar").node().value = 2020
         d3.select("#endYearVar").node().value = 2024
