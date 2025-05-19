@@ -53,10 +53,12 @@ let counts = {
     g2NotDepressed: 0
 };
 
-let totalPopAfter = {
-    g1: 0,
-    g2: 0
-};
+let totalPop = {
+    'g1before': 0,
+    'g1after': 0,
+    'g2before': 0,
+    'g2after': 0
+}
 
 // Append an SVG element to the body
 const svg = d3.select("#vis")
@@ -86,6 +88,7 @@ function init() {
         console.log(data);
         allData = data;
         setupSelectors();
+        updatePreset();
         filter();
         loadCircles();
     })
@@ -157,17 +160,13 @@ function updateVis() {
     loadCircles();
 }
 
-function weighted_depression_tab(l, group) {
+function group_wt(group) {
+    return group.reduce((acc, v) => acc + parseFloat(v.weight), 0)
+}
+
+function weighted_depression_tab(l) {
     const total_wt = l.reduce((acc, v) => acc + parseFloat(v.weight), 0);
     const dep_wt = l.reduce((acc, v) => v.isDepressed == 1 ? acc + parseFloat(v.weight) : acc, 0);
-    if (group != null) {
-        if (group == totalPopAfter.g1) {
-            totalPopAfter.g1 = total_wt;
-        } else {
-            totalPopAfter.g2 = total_wt;
-        }
-    }
-    // console.log(`Weights: Total: ${total_wt}, Depp: ${dep_wt}`)
     return dep_wt / total_wt;
 }
 
@@ -203,13 +202,21 @@ function filter() {
     group2after = group2.filter(d => d.year == dropdownValue('endYear'));
 
     depressionRates = {
-        'g1before': weighted_depression_tab(group1before, null),
-        'g1after': weighted_depression_tab(group1after, totalPopAfter.g1),
-        'g2before': weighted_depression_tab(group2before, null),
-        'g2after': weighted_depression_tab(group2after, totalPopAfter.g2),
+        'g1before': weighted_depression_tab(group1before),
+        'g1after': weighted_depression_tab(group1after),
+        'g2before': weighted_depression_tab(group2before),
+        'g2after': weighted_depression_tab(group2after),
     };
 
+    totalPop = {
+        'g1before': group_wt(group1before),
+        'g1after': group_wt(group1after),
+        'g2before': group_wt(group2before),
+        'g2after': group_wt(group2after),
+    }
+
     console.log("Depression rates: ", depressionRates);
+    console.log("Populations: ", totalPop);
 }
 
 function generateBezierPath(p1, p2) {
@@ -477,11 +484,11 @@ function loadCircles() {
 
         function updateCounts() {
             if (group === 1) {
-                if (isDepressedEnd) counts.g1Depressed += totalPopAfter.g1 / numCircles / 2;
-                else counts.g1NotDepressed += totalPopAfter.g1 / numCircles / 2;
+                if (isDepressedEnd) counts.g1Depressed += totalPop.g1after / (numCircles / 2);
+                else counts.g1NotDepressed += totalPop.g1after / (numCircles / 2);
             } else {
-                if (isDepressedEnd) counts.g2Depressed += totalPopAfter.g2 / numCircles / 2;
-                else counts.g2NotDepressed += totalPopAfter.g2 / numCircles / 2;
+                if (isDepressedEnd) counts.g2Depressed += totalPop.g2after / (numCircles / 2);
+                else counts.g2NotDepressed += totalPop.g2after / (numCircles / 2);
             }
 
             let g1Total = counts.g1Depressed + counts.g1NotDepressed;
@@ -562,7 +569,82 @@ function loadCircles() {
     }
 
     console.log(groupCircleNums)
-    
     addLabels();
 
+}
+
+const colorText = (text, color) => `<span style="color: ${color};">${text}</span>`
+
+const dropdownValue = (x) => d3.select(`#${x}Var`).node().value;
+
+const presets = [
+        {
+            type: "normal",
+            text: `Depression rates among the ${colorText("young", "#CB5680")} (18-25) and ${colorText("general population", "#86C1C4")} before and during COVID`,
+            fields: {
+                startYearVar: 2019,
+                endYearVar: 2021,
+                g1AgeVar: "18-25",
+                g1Color: "#CB5680",
+                g2Color: "#86C1C4",
+            },
+        },
+        {
+            type: "custom",
+            text: "Create your own groups!"
+        }
+]
+
+let preset = presets[0]
+
+function updatePreset() {
+    document.getElementById("presetText").innerHTML = preset.text
+
+    // Exit if custom
+    if (preset.type == "custom") {
+
+        document.getElementById("controls").style.display = ""
+        return
+    }
+
+    document.getElementById("controls").style.display = "none"
+
+    for (const key in preset.fields) {
+        console.log(key, d3.select(`#${key}`).node().value, preset.fields[key])
+        d3.select(`#${key}`).node().value = preset.fields[key]
+    }
+}
+
+
+function changePreset(c) {
+    let i = presets.indexOf(preset)
+    // this code is janky sorry guys
+    if (c < 0) {
+        if (i == 0) {
+            preset = presets[presets.length - 1]
+        } else {
+            preset = presets[i - 1]
+        }
+    }
+
+    if (c > 0) {
+        if (i == presets.length - 1) {
+            preset = presets[0]
+        } else {
+            preset = presets[i + 1]
+        }
+    }
+
+    i = presets.indexOf(preset)
+
+    updatePreset()
+
+    if (i == presets.length - 1) {
+        svg.selectAll('circle').interrupt();
+        svg.selectAll('circle').remove();
+        svg.selectAll('path').remove();
+        svg.selectAll('rect').remove();
+    } else {
+        updateVis()
+    }
 }
