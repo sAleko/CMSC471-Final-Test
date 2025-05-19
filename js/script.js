@@ -661,13 +661,13 @@ function loadCircles() {
             
 
             d3.select('#g1DepressedCount')
-                .text(`${displayedNumber(counts.g1Depressed)} \t(${((counts.g1Depressed / (g1Total != 0 ? g1Total : 1)) * 100).toFixed(1)}%)`);
+                .text(`${displayedNumber(counts.g1Depressed)} \t(${((counts.g1Depressed / (g1Total != 0 ? g1Total : 1)) * 100).toFixed()}%)`);
             d3.select('#g1NotDepressedCount')
-                .text(`${displayedNumber(counts.g1NotDepressed)} (${((counts.g1NotDepressed / (g1Total != 0 ? g1Total : 1)) * 100).toFixed(1)}%)`);
+                .text(`${displayedNumber(counts.g1NotDepressed)} (${((counts.g1NotDepressed / (g1Total != 0 ? g1Total : 1)) * 100).toFixed()}%)`);
             d3.select('#g2DepressedCount')
-                .text(`${displayedNumber(counts.g2Depressed)} (${((counts.g2Depressed / (g2Total != 0 ? g2Total : 1)) * 100).toFixed(1)}%)`);
+                .text(`${displayedNumber(counts.g2Depressed)} (${((counts.g2Depressed / (g2Total != 0 ? g2Total : 1)) * 100).toFixed()}%)`);
             d3.select('#g2NotDepressedCount')
-                .text(`${displayedNumber(counts.g2NotDepressed)} (${((counts.g2NotDepressed / (g2Total != 0 ? g2Total : 1)) * 100).toFixed(1)}%)`);
+                .text(`${displayedNumber(counts.g2NotDepressed)} (${((counts.g2NotDepressed / (g2Total != 0 ? g2Total : 1)) * 100).toFixed()}%)`);
 
             //This is for the bar graphs that grow upward
              const maxBarHeight = 100;
@@ -793,17 +793,17 @@ function loadCircles() {
 
         // Update text labels for Group 1
         d3.select('#Lg1DepressedCount')
-            .text(`${displayedNumber(depressionRates.g1before * g1BeforePop)} (${(depressionRates.g1before * 100).toFixed(1)}%)`);
+            .text(`${displayedNumber(Math.round(depressionRates.g1before * 100) / 100 * g1BeforePop)} (${(depressionRates.g1before * 100).toFixed(0)}%)`);
 
         d3.select('#Lg1NotDepressedCount')
-            .text(`${displayedNumber((1 - depressionRates.g1before) * g1BeforePop)} (${((1 - depressionRates.g1before) * 100).toFixed(1)}%)`);
+            .text(`${displayedNumber((1 - Math.round(depressionRates.g1before * 100) / 100) * g1BeforePop)} (${((1 - depressionRates.g1before) * 100).toFixed(0)}%)`);
 
    
         d3.select('#Lg2DepressedCount')
-            .text(`${displayedNumber(depressionRates.g2before * g2BeforePop)} (${(depressionRates.g2before * 100).toFixed(1)}%)`);
+            .text(`${displayedNumber(Math.round(depressionRates.g2before * 100) / 100 * g2BeforePop)} (${(depressionRates.g2before * 100).toFixed(0)}%)`);
 
         d3.select('#Lg2NotDepressedCount')
-            .text(`${displayedNumber((1 - depressionRates.g2before) * g2BeforePop)} (${((1 - depressionRates.g2before) * 100).toFixed(1)}%)`);
+            .text(`${displayedNumber((1 - Math.round(depressionRates.g2before * 100) / 100) * g2BeforePop)} (${((1 - depressionRates.g2before) * 100).toFixed(0)}%)`);
 
         // bars height 
         d3.select('#Lg1D')
