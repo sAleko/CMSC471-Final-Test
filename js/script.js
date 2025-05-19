@@ -46,6 +46,13 @@ let depressionRates = {
     'g2after': 0.0,
 };
 
+let nValues = {
+    'g1before': 0,
+    'g1after': 0,
+    'g2before': 0,
+    'g2after': 0,
+}
+
 let counts = {
     g1Depressed: 0,
     g1NotDepressed: 0,
@@ -208,6 +215,13 @@ function filter() {
         'g2after': weighted_depression_tab(group2after),
     };
 
+    nValues = {
+        'g1before': group1before.length,
+        'g1after': group1after.length,
+        'g2before': group2before.length,
+        'g2after': group2after.length
+    }
+
     totalPop = {
         'g1before': group_wt(group1before),
         'g1after': group_wt(group1after),
@@ -237,6 +251,52 @@ function addLabels() {
 
     const startYear = d3.select('#startYearVar').node().value;
     const endYear = d3.select('#endYearVar').node().value;
+
+    nLabels()
+
+    function nLabels() {
+        const tinyTextSize = width * 0.012;
+
+        console.log(nValues)
+
+        // Before
+        svg.append('text')
+            .attr('x', curveMargin.x * 0.05)
+            .attr('y', height - curveMargin.y * 0.25)
+            .attr('text-anchor', 'start')
+            .attr('font-family', 'Arial, sans-serif')
+            .attr('font-size', `${tinyTextSize}px`)
+            .attr('fill', '#333')
+            .text(`Group 1 n=${nValues.g1before}`);
+
+        svg.append('text')
+            .attr('x', curveMargin.x * 0.05)
+            .attr('y', height - curveMargin.y * 0.1)
+            .attr('text-anchor', 'start')
+            .attr('font-family', 'Arial, sans-serif')
+            .attr('font-size', `${tinyTextSize}px`)
+            .attr('fill', '#333')
+            .text(`Group 2 n=${nValues.g2before}`);
+        
+        // After
+        svg.append('text')
+            .attr('x', width - curveMargin.x * 0.4)
+            .attr('y', height - curveMargin.y * 0.25)
+            .attr('text-anchor', 'start')
+            .attr('font-family', 'Arial, sans-serif')
+            .attr('font-size', `${tinyTextSize}px`)
+            .attr('fill', '#333')
+            .text(`Group 1 n=${nValues.g1after}`);
+
+        svg.append('text')
+            .attr('x', width - curveMargin.x * 0.4)
+            .attr('y', height - curveMargin.y * 0.1)
+            .attr('text-anchor', 'start')
+            .attr('font-family', 'Arial, sans-serif')
+            .attr('font-size', `${tinyTextSize}px`)
+            .attr('fill', '#333')
+            .text(`Group 2 n=${nValues.g2after}`);
+    }
 
     svg.append('text')
         .attr('x', curveMargin.x * 0.9)
