@@ -758,13 +758,24 @@ function updatePreset() {
     if (preset.type == "custom") {
 
         document.getElementById("controls").style.display = ""
+
+        const anyVars = ['g1Age', 'g1Sex', 'g1Ethnicity', 'g1Health', 'g1Income', 'g1Insured', 'g1Served', 'g2Age', 'g2Sex', 'g2Ethnicity', 'g2Health', 'g2Income', 'g2Insured', 'g2Served'];
+        
+        for (const v of anyVars) {
+            d3.select(`#${v}Var`).node().value = "Any"
+        }
+
+        d3.select("#startYearVar").node().value = 2020
+        d3.select("#endYearVar").node().value = 2024
+        d3.select("#g1Color").node().value = "#61AC7B"
+        d3.select("#g2Color").node().value = "#F09E45"
+
         return
     }
 
     document.getElementById("controls").style.display = "none"
 
     for (const key in preset.fields) {
-        console.log(key, d3.select(`#${key}`).node().value, preset.fields[key])
         d3.select(`#${key}`).node().value = preset.fields[key]
     }
 }
@@ -798,6 +809,22 @@ function changePreset(c) {
         svg.selectAll('circle').remove();
         svg.selectAll('path').remove();
         svg.selectAll('rect').remove();
+        svg.selectAll('text').remove();
+
+        const bigTextSize = width * 0.03;
+
+        svg.append('text')
+            .attr('x', width / 2)
+            .attr('y', height / 2)
+            .attr('text-anchor', 'middle')
+            .attr('font-family', 'Arial, sans-serif')
+            .attr('font-size', `${bigTextSize}px`)
+            .attr('fill', '#333')
+            .attr('stroke', 'white')
+            .attr('stroke-width', '1')
+            .text('Create your own groups below!');
+
+
     } else {
         updateVis()
     }
